@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Quiz Platform{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="jumbotron bg-primary text-white rounded p-5 mb-4">
+            <h1 class="display-4">स्वागतम् - Welcome to Nepali Quiz Platform</h1>
+            <p class="lead">Test your knowledge about Nepal and general topics with our interactive quizzes featuring timers, random questions, and leaderboards!</p>
+            <p class="mb-4"><strong>Created by: Prabin Dhungana</strong></p>
+            <a class="btn btn-light btn-lg" href="{% url 'quiz:quiz_list' %}" role="button">
+                <i class="fas fa-play me-2"></i>Start Nepal Quiz
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-question-circle fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Nepal-Focused Questions</h5>
+                <p class="card-text">Questions about Nepal's culture, history, geography, and general knowledge.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-clock fa-3x text-warning mb-3"></i>
+                <h5 class="card-title">Timed Challenges</h5>
+                <p class="card-text">Each question has a timer to test your quick thinking skills.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-random fa-3x text-success mb-3"></i>
+                <h5 class="card-title">Random Questions</h5>
+                <p class="card-text">Questions are randomized for a unique experience every time.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-trophy fa-3x text-danger mb-3"></i>
+                <h5 class="card-title">Leaderboard</h5>
+                <p class="card-text">Compete with others and see your ranking on the leaderboard.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 class="mb-4">Recent Quizzes</h2>
+<div class="row">
+    {% for quiz in recent_quizzes %}
+        <div class="col-md-4 mb-4">
+            <div class="card quiz-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ quiz.title }}</h5>
+                    <p class="card-text">{{ quiz.description|truncatewords:20 }}</p>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-primary">{{ quiz.category.name }}</span>
+                        <span class="badge bg-secondary">{{ quiz.get_difficulty_display }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between text-muted small mb-3">
+                        <span><i class="fas fa-clock me-1"></i>{{ quiz.time_limit }} min</span>
+                        <span><i class="fas fa-question me-1"></i>{{ quiz.questions_count }} questions</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'quiz:quiz_detail' quiz.id %}" class="btn btn-primary w-100">
+                        <i class="fas fa-play me-2"></i>Take Quiz
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle me-2"></i>No quizzes available yet. Check back later!
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% if categories %}
+<h2 class="mb-4">Categories</h2>
+<div class="row">
+    {% for category in categories %}
+        <div class="col-md-3 mb-3">
+            <a href="{% url 'quiz:quiz_list' %}?category={{ category.id }}" class="text-decoration-none">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-folder fa-2x text-primary mb-2"></i>
+                        <h6 class="card-title">{{ category.name }}</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
